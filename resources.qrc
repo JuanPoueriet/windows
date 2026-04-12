@@ -1,0 +1,8 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+    <file>src/icons/plus.svg</file>
+    <file>src/icons/close.svg</file>
+    <file>src/icons/tab.svg</file>
+    <file>src/StyleSheet.qss</file>
+</qresource>
+</RCC>

@@ -1,0 +1,88 @@
+/* General styles */
+QWidget {
+    background-color: #2b2b2b;
+    color: #dcdcdc;
+    font-family: "Segoe UI", "Roboto", "Helvetica Neue", sans-serif;
+    font-size: 14px;
+}
+
+QMainWindow {
+    background-color: #202020;
+}
+
+/* Tab Bar styles */
+QTabBar::tab {
+    background-color: #3c3f41;
+    color: #bbbbbb;
+    padding: 8px 16px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    margin-right: 2px;
+    min-width: 100px;
+}
+
+QTabBar::tab:selected {
+    background-color: #2b2b2b;
+    color: #ffffff;
+    border-bottom: 2px solid #4a9eff;
+}
+
+QTabBar::tab:hover {
+    background-color: #4e5254;
+}
+
+QTabBar::close-button {
+    image: url(:/src/icons/close.svg);
+    subcontrol-position: right;
+}
+
+QTabBar::close-button:hover {
+    background-color: #ff4d4d;
+    border-radius: 4px;
+}
+
+/* ScrollArea and StackedWidget */
+QStackedWidget {
+    border: 1px solid #3c3f41;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    background-color: #2b2b2b;
+}
+
+/* Text Edit styles */
+QTextEdit {
+    background-color: #1e1e1e;
+    color: #dcdcdc;
+    border: 1px solid #3c3f41;
+    border-radius: 4px;
+    padding: 8px;
+    selection-background-color: #4a9eff;
+}
+
+/* Button styles */
+QPushButton {
+    background-color: #3c3f41;
+    border: 1px solid #4e5254;
+    border-radius: 4px;
+    padding: 4px 8px;
+}
+
+QPushButton:hover {
+    background-color: #4e5254;
+}
+
+QPushButton:pressed {
+    background-color: #2b2b2b;
+}
+
+#addTabButton {
+    background-color: transparent;
+    border: none;
+    padding: 4px;
+    margin-left: 4px;
+}
+
+#addTabButton:hover {
+    background-color: #4e5254;
+    border-radius: 12px;
+}
