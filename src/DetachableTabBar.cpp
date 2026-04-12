@@ -6,6 +6,7 @@
 #include <QDrag>
 #include <QMimeData>
 #include <QApplication>
+#include <QInputDialog>
 
 DetachableTabBar::DetachableTabBar(QWidget* parent) : QTabBar(parent) {
     setAcceptDrops(true);
@@ -15,8 +16,33 @@ DetachableTabBar::DetachableTabBar(QWidget* parent) : QTabBar(parent) {
 void DetachableTabBar::mousePressEvent(QMouseEvent* event) {
     if (event->button() == Qt::LeftButton) {
         m_dragStartPosition = event->pos();
+    } else if (event->button() == Qt::MiddleButton) {
+        int index = tabAt(event->pos());
+        if (index != -1) {
+            emit tabCloseRequested(index);
+        }
     }
     QTabBar::mousePressEvent(event);
+}
+
+void DetachableTabBar::mouseDoubleClickEvent(QMouseEvent* event) {
+    int index = tabAt(event->pos());
+    if (index != -1) {
+        TabHost* host = qobject_cast<TabHost*>(parent());
+        if (host) {
+            TabSession* session = host->getTab(index);
+            if (session) {
+                bool ok;
+                QString newTitle = QInputDialog::getText(this, tr("Rename Tab"),
+                                                         tr("New title:"), QLineEdit::Normal,
+                                                         session->title(), &ok);
+                if (ok && !newTitle.isEmpty()) {
+                    session->setTitle(newTitle);
+                }
+            }
+        }
+    }
+    QTabBar::mouseDoubleClickEvent(event);
 }
 
 void DetachableTabBar::mouseMoveEvent(QMouseEvent* event) {

@@ -12,6 +12,9 @@ public:
     QString content() const;
     void setContent(const QString& content);
 
+signals:
+    void contentChanged();
+
 private:
     QTextEdit* m_textEdit;
 };
