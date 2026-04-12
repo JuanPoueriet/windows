@@ -1,5 +1,0 @@
-C:/Users/Usuario/Downloads/virtex/build/CMakeFiles/ChromeTabsQt.dir
-C:/Users/Usuario/Downloads/virtex/build/CMakeFiles/edit_cache.dir
-C:/Users/Usuario/Downloads/virtex/build/CMakeFiles/rebuild_cache.dir
-C:/Users/Usuario/Downloads/virtex/build/CMakeFiles/ChromeTabsQt_autogen_timestamp_deps.dir
-C:/Users/Usuario/Downloads/virtex/build/CMakeFiles/ChromeTabsQt_autogen.dir
