@@ -18,12 +18,22 @@ add_executable(ChromeTabsQt
     src/TabSession.cpp
     src/TabView.h
     src/TabView.cpp
+    src/DashboardWidget.h
+    src/DashboardWidget.cpp
+    src/DataTableWidget.h
+    src/DataTableWidget.cpp
     src/DetachableTabBar.h
     src/DetachableTabBar.cpp
     src/TabHost.h
     src/TabHost.cpp
     src/AppWindow.h
     src/AppWindow.cpp
+    src/Sidebar.h
+    src/Sidebar.cpp
+    src/TopHeader.h
+    src/TopHeader.cpp
+    src/StatusBar.h
+    src/StatusBar.cpp
     src/WindowManager.h
     src/WindowManager.cpp
 )

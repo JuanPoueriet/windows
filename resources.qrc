@@ -3,6 +3,38 @@
     <file>src/icons/plus.svg</file>
     <file>src/icons/close.svg</file>
     <file>src/icons/tab.svg</file>
+    <file>src/icons/chart-line.svg</file>
+    <file>src/icons/file-invoice-dollar.svg</file>
+    <file>src/icons/boxes-stacked.svg</file>
+    <file>src/icons/building-user.svg</file>
+    <file>src/icons/truck-fast.svg</file>
+    <file>src/icons/users.svg</file>
+    <file>src/icons/calculator.svg</file>
+    <file>src/icons/chart-bar.svg</file>
+    <file>src/icons/gear.svg</file>
+    <file>src/icons/shield-check.svg</file>
+    <file>src/icons/chevron-left.svg</file>
+    <file>src/icons/chevron-right.svg</file>
+    <file>src/icons/chevron-down.svg</file>
+    <file>src/icons/magnifying-glass.svg</file>
+    <file>src/icons/sun.svg</file>
+    <file>src/icons/moon.svg</file>
+    <file>src/icons/bell.svg</file>
+    <file>src/icons/circle-question.svg</file>
+    <file>src/icons/layer-group.svg</file>
+    <file>src/icons/xmark.svg</file>
+    <file>src/icons/dollar-sign.svg</file>
+    <file>src/icons/file-invoice.svg</file>
+    <file>src/icons/triangle-exclamation.svg</file>
+    <file>src/icons/clock-rotate-left.svg</file>
+    <file>src/icons/list-check.svg</file>
+    <file>src/icons/arrow-trend-up.svg</file>
+    <file>src/icons/arrow-trend-down.svg</file>
+    <file>src/icons/database.svg</file>
+    <file>src/icons/clock.svg</file>
+    <file>src/icons/calendar.svg</file>
+    <file>src/icons/user.svg</file>
+    <file>src/icons/shield-alt.svg</file>
     <file>src/StyleSheet.qss</file>
 </qresource>
 </RCC>

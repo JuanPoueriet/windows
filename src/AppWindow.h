@@ -3,6 +3,9 @@
 #include <QMainWindow>
 
 class TabHost;
+class Sidebar;
+class TopHeader;
+class StatusBar;
 
 class AppWindow : public QMainWindow {
     Q_OBJECT
@@ -14,5 +17,8 @@ protected:
     void closeEvent(QCloseEvent* event) override;
 
 private:
+    Sidebar* m_sidebar;
+    TopHeader* m_header;
+    StatusBar* m_statusBar;
     TabHost* m_tabHost;
 };
