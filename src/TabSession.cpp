@@ -3,6 +3,7 @@
 
 TabSession::TabSession(const QString& title, QObject* parent)
     : QObject(parent), m_title(title) {
+    m_icon = QIcon(":/src/icons/tab.svg");
 }
 
 void TabSession::setTitle(const QString& title) {

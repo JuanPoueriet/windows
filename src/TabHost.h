@@ -29,6 +29,7 @@ protected:
 private slots:
     void onCurrentChanged(int index);
     void onTabCloseRequested(int index);
+    void onAddTabRequested();
 
 private:
     DetachableTabBar* m_tabBar;

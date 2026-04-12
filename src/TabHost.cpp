@@ -7,6 +7,10 @@
 #include <QStackedWidget>
 #include <QDragEnterEvent>
 #include <QMimeData>
+#include <QPushButton>
+#include <QIcon>
+#include <QPropertyAnimation>
+#include <QGraphicsOpacityEffect>
 #include <QDebug>
 
 TabHost::TabHost(QWidget* parent) : QWidget(parent) {
@@ -18,14 +22,26 @@ TabHost::TabHost(QWidget* parent) : QWidget(parent) {
     m_tabBar = new DetachableTabBar(this);
     m_tabBar->setTabsClosable(true);
     m_tabBar->setMovable(true);
+    m_tabBar->setExpanding(false);
+
+    QHBoxLayout* topLayout = new QHBoxLayout();
+    topLayout->setContentsMargins(0, 0, 5, 0);
+    topLayout->setSpacing(0);
+    topLayout->addWidget(m_tabBar);
+
+    QPushButton* addTabButton = new QPushButton(QIcon(":/src/icons/plus.svg"), "", this);
+    addTabButton->setObjectName("addTabButton");
+    addTabButton->setFixedSize(28, 28);
+    topLayout->addWidget(addTabButton);
 
     m_stackedWidget = new QStackedWidget(this);
 
-    layout->addWidget(m_tabBar);
+    layout->addLayout(topLayout);
     layout->addWidget(m_stackedWidget);
 
     connect(m_tabBar, &QTabBar::currentChanged, this, &TabHost::onCurrentChanged);
     connect(m_tabBar, &QTabBar::tabCloseRequested, this, &TabHost::onTabCloseRequested);
+    connect(addTabButton, &QPushButton::clicked, this, &TabHost::onAddTabRequested);
 }
 
 TabHost::~TabHost() {
@@ -75,12 +91,32 @@ int TabHost::count() const {
 
 void TabHost::onCurrentChanged(int index) {
     if (index >= 0 && index < m_stackedWidget->count()) {
+        QWidget* current = m_stackedWidget->widget(index);
+        if (current) {
+            QGraphicsOpacityEffect* effect = new QGraphicsOpacityEffect(current);
+            current->setGraphicsEffect(effect);
+            QPropertyAnimation* animation = new QPropertyAnimation(effect, "opacity");
+            animation->setDuration(300);
+            animation->setStartValue(0.0);
+            animation->setEndValue(1.0);
+            animation->setEasingCurve(QEasingCurve::InOutQuad);
+            animation->start(QAbstractAnimation::DeleteWhenStopped);
+        }
         m_stackedWidget->setCurrentIndex(index);
     }
 }
 
 void TabHost::onTabCloseRequested(int index) {
     removeTab(index, true);
+}
+
+void TabHost::onAddTabRequested() {
+    static int tabCount = 1;
+    TabSession* session = new TabSession(QString("New Tab %1").arg(tabCount++), this);
+    TabView* view = new TabView();
+    view->setContent(QString("This is a new tab."));
+    session->setView(view);
+    addTab(session);
 }
 
 void TabHost::dragEnterEvent(QDragEnterEvent* event) {
