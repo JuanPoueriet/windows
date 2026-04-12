@@ -14,6 +14,8 @@ TabView::TabView(QWidget* parent) : QWidget(parent) {
 
     m_textEdit = new QTextEdit(this);
     layout->addWidget(m_textEdit);
+
+    connect(m_textEdit, &QTextEdit::textChanged, this, &TabView::contentChanged);
 }
 
 QString TabView::content() const {

@@ -30,6 +30,7 @@ private slots:
     void onCurrentChanged(int index);
     void onTabCloseRequested(int index);
     void onAddTabRequested();
+    void updateTabDisplay(TabSession* session);
 
 private:
     DetachableTabBar* m_tabBar;

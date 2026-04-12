@@ -25,7 +25,7 @@ TabHost::TabHost(QWidget* parent) : QWidget(parent) {
     m_tabBar->setExpanding(false);
 
     QHBoxLayout* topLayout = new QHBoxLayout();
-    topLayout->setContentsMargins(0, 0, 5, 0);
+    topLayout->setContentsMargins(10, 5, 10, 0);
     topLayout->setSpacing(0);
     topLayout->addWidget(m_tabBar);
 
@@ -33,11 +33,13 @@ TabHost::TabHost(QWidget* parent) : QWidget(parent) {
     addTabButton->setObjectName("addTabButton");
     addTabButton->setFixedSize(28, 28);
     topLayout->addWidget(addTabButton);
+    topLayout->addStretch();
 
     m_stackedWidget = new QStackedWidget(this);
 
     layout->addLayout(topLayout);
     layout->addWidget(m_stackedWidget);
+    layout->setContentsMargins(5, 0, 5, 5);
 
     connect(m_tabBar, &QTabBar::currentChanged, this, &TabHost::onCurrentChanged);
     connect(m_tabBar, &QTabBar::tabCloseRequested, this, &TabHost::onTabCloseRequested);
@@ -60,12 +62,30 @@ void TabHost::insertTab(int index, TabSession* session) {
 
     session->view()->setParent(m_stackedWidget);
     m_tabBar->setCurrentIndex(realIndex);
+
+    connect(session->view(), &TabView::contentChanged, this, [this, session]() {
+        session->setDirty(true);
+    });
+
+    connect(session, &TabSession::titleChanged, this, [this, session]() {
+        updateTabDisplay(session);
+    });
+
+    connect(session, &TabSession::dirtyChanged, this, [this, session]() {
+        updateTabDisplay(session);
+    });
+
+    updateTabDisplay(session);
 }
 
 void TabHost::removeTab(int index, bool deleteSession) {
     if (index < 0 || index >= static_cast<int>(m_sessions.size())) return;
 
     TabSession* session = m_sessions[index];
+
+    session->view()->disconnect(this);
+    session->disconnect(this);
+
     m_tabBar->removeTab(index);
     m_stackedWidget->removeWidget(session->view());
     m_sessions.erase(m_sessions.begin() + index);
@@ -96,10 +116,10 @@ void TabHost::onCurrentChanged(int index) {
             QGraphicsOpacityEffect* effect = new QGraphicsOpacityEffect(current);
             current->setGraphicsEffect(effect);
             QPropertyAnimation* animation = new QPropertyAnimation(effect, "opacity");
-            animation->setDuration(300);
+            animation->setDuration(200); // Slightly faster for snappier feel
             animation->setStartValue(0.0);
             animation->setEndValue(1.0);
-            animation->setEasingCurve(QEasingCurve::InOutQuad);
+            animation->setEasingCurve(QEasingCurve::OutCubic);
             animation->start(QAbstractAnimation::DeleteWhenStopped);
         }
         m_stackedWidget->setCurrentIndex(index);
@@ -117,6 +137,19 @@ void TabHost::onAddTabRequested() {
     view->setContent(QString("This is a new tab."));
     session->setView(view);
     addTab(session);
+}
+
+void TabHost::updateTabDisplay(TabSession* session) {
+    for (int i = 0; i < static_cast<int>(m_sessions.size()); ++i) {
+        if (m_sessions[i] == session) {
+            QString displayText = session->title();
+            if (session->isDirty()) {
+                displayText = "* " + displayText;
+            }
+            m_tabBar->setTabText(i, displayText);
+            break;
+        }
+    }
 }
 
 void TabHost::dragEnterEvent(QDragEnterEvent* event) {
