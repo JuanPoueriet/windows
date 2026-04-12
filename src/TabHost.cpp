@@ -14,32 +14,37 @@
 #include <QDebug>
 
 TabHost::TabHost(QWidget* parent) : QWidget(parent) {
+    setObjectName("tab-host");
     setAcceptDrops(true);
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
 
-    m_tabBar = new DetachableTabBar(this);
+    QWidget* tabsBarWidget = new QWidget(this);
+    tabsBarWidget->setObjectName("tabs-bar");
+    tabsBarWidget->setFixedHeight(38);
+    QHBoxLayout* tabsBarLayout = new QHBoxLayout(tabsBarWidget);
+    tabsBarLayout->setContentsMargins(8, 0, 8, 0);
+    tabsBarLayout->setSpacing(2);
+
+    m_tabBar = new DetachableTabBar(tabsBarWidget);
     m_tabBar->setTabsClosable(true);
     m_tabBar->setMovable(true);
     m_tabBar->setExpanding(false);
 
-    QHBoxLayout* topLayout = new QHBoxLayout();
-    topLayout->setContentsMargins(10, 5, 10, 0);
-    topLayout->setSpacing(0);
-    topLayout->addWidget(m_tabBar);
+    QPushButton* addTabButton = new QPushButton(QIcon(":/src/icons/plus.svg"), "", tabsBarWidget);
+    addTabButton->setObjectName("newTabGlobal");
+    addTabButton->setFixedSize(32, 32);
 
-    QPushButton* addTabButton = new QPushButton(QIcon(":/src/icons/plus.svg"), "", this);
-    addTabButton->setObjectName("addTabButton");
-    addTabButton->setFixedSize(28, 28);
-    topLayout->addWidget(addTabButton);
-    topLayout->addStretch();
+    tabsBarLayout->addWidget(m_tabBar);
+    tabsBarLayout->addWidget(addTabButton);
+    tabsBarLayout->addStretch();
 
     m_stackedWidget = new QStackedWidget(this);
+    m_stackedWidget->setObjectName("mainContent");
 
-    layout->addLayout(topLayout);
+    layout->addWidget(tabsBarWidget);
     layout->addWidget(m_stackedWidget);
-    layout->setContentsMargins(5, 0, 5, 5);
 
     connect(m_tabBar, &QTabBar::currentChanged, this, &TabHost::onCurrentChanged);
     connect(m_tabBar, &QTabBar::tabCloseRequested, this, &TabHost::onTabCloseRequested);
@@ -75,6 +80,12 @@ void TabHost::insertTab(int index, TabSession* session) {
         updateTabDisplay(session);
     });
 
+    connect(session, &TabSession::moduleTypeChanged, this, [this, session](TabSession::ModuleType type) {
+        session->view()->setModuleType(type);
+        updateTabDisplay(session);
+    });
+
+    session->view()->setModuleType(session->moduleType());
     updateTabDisplay(session);
 }
 
@@ -133,13 +144,27 @@ void TabHost::onTabCloseRequested(int index) {
 void TabHost::onAddTabRequested() {
     static int tabCount = 1;
     TabSession* session = new TabSession(QString("New Tab %1").arg(tabCount++), this);
+    session->setModuleType(TabSession::Dashboard);
     TabView* view = new TabView();
-    view->setContent(QString("This is a new tab."));
     session->setView(view);
     addTab(session);
 }
 
 void TabHost::updateTabDisplay(TabSession* session) {
+    static const QMap<TabSession::ModuleType, QString> moduleIcons = {
+        {TabSession::Dashboard, "chart-line"},
+        {TabSession::Invoicing, "file-invoice-dollar"},
+        {TabSession::Inventory, "boxes-stacked"},
+        {TabSession::Clients, "building-user"},
+        {TabSession::Purchases, "truck-fast"},
+        {TabSession::HR, "users"},
+        {TabSession::Accounting, "calculator"},
+        {TabSession::Reports, "chart-bar"},
+        {TabSession::Analytics, "chart-line"},
+        {TabSession::Settings, "gear"},
+        {TabSession::Audit, "shield-check"}
+    };
+
     for (int i = 0; i < static_cast<int>(m_sessions.size()); ++i) {
         if (m_sessions[i] == session) {
             QString displayText = session->title();
@@ -147,6 +172,7 @@ void TabHost::updateTabDisplay(TabSession* session) {
                 displayText = "* " + displayText;
             }
             m_tabBar->setTabText(i, displayText);
+            m_tabBar->setTabIcon(i, QIcon(QString(":/src/icons/%1.svg").arg(moduleIcons.value(session->moduleType(), "circle"))));
             break;
         }
     }

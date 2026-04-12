@@ -22,6 +22,13 @@ void TabSession::setView(TabView* view) {
     m_view = view;
 }
 
+void TabSession::setModuleType(ModuleType type) {
+    if (m_moduleType != type) {
+        m_moduleType = type;
+        emit moduleTypeChanged(type);
+    }
+}
+
 void TabSession::setDirty(bool dirty) {
     if (m_isDirty != dirty) {
         m_isDirty = dirty;
